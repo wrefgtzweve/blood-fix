@@ -19,4 +19,4 @@ local function playEffects( ent, data )
     util.Decal( "Blood", tempBloodPos, bloodPos, ent )
 end
 
-hook.Add( "PostEntityTakeDamage", "CFC_ResponsiveHits_PostEntityTakeDamage", playEffects )
+hook.Add( "PostEntityTakeDamage", "ResponsiveHits_PostEntityTakeDamage", playEffects )
