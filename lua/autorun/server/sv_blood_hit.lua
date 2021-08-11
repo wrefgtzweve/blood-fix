@@ -1,12 +1,11 @@
-local GetBloodColor = FindMetaTable( "Player" ).MetaBaseClass.GetBloodColor
-local IsPlayer = FindMetaTable( "Player" ).IsPlayer
+local GetBloodColor = FindMetaTable( "Entity" ).GetBloodColor
 local IsBulletDamage = FindMetaTable( "CTakeDamageInfo" ).IsBulletDamage
 
 local util_Decal = util.Decal
 local math_random = math.random
 
 local function playEffects( ent, data )
-    if not IsPlayer( ent ) or not IsBulletDamage( data ) then return end
+    if not ent:IsPlayer() or not IsBulletDamage( data ) then return end
     if GetBloodColor( ent ) == 0 then
         ent:SetBloodColor( -1 )
     end
