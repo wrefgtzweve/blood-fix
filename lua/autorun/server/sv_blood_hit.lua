@@ -26,7 +26,6 @@ local function playEffects( ent, data )
     if getBloodColor( ent ) ~= -1 then return end
 
     local bloodColor = ent.bloodColorHitFix
-    print( bloodColor )
 
     -- 3 Because robots don't bleed yet they have their own blood type for some reason.
     if not bloodColor or bloodColor == 3 then return end
