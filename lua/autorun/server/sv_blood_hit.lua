@@ -1,28 +1,52 @@
-local GetBloodColor = FindMetaTable( "Entity" ).GetBloodColor
-local IsBulletDamage = FindMetaTable( "CTakeDamageInfo" ).IsBulletDamage
+local getBloodColor = FindMetaTable( "Entity" ).GetBloodColor
+local isBulletDamage = FindMetaTable( "CTakeDamageInfo" ).IsBulletDamage
 
 local util_Decal = util.Decal
 local math_random = math.random
+local rawget = rawget
+
+local bloodColors = {
+    [0] = "Blood",
+    [1] = "YellowBlood",
+    [2] = "YellowBlood",
+    [3] = "ManhackSparks",
+    [4] = "YellowBlood",
+    [5] = "YellowBlood",
+    [6] = "YellowBlood"
+}
 
 local function playEffects( ent, data )
-    if not ent:IsPlayer() or not IsBulletDamage( data ) then return end
-    if GetBloodColor( ent ) == 0 then
+    if not ( ent:IsPlayer() or ent:IsNPC() ) or not isBulletDamage( data ) then return end
+
+    if getBloodColor( ent ) ~= -1 then
+        ent.bloodColorHitFix = getBloodColor( ent )
         ent:SetBloodColor( -1 )
     end
 
-    if GetBloodColor( ent ) ~= -1 then return end
+    if getBloodColor( ent ) ~= -1 then return end
 
-    local hitpos = data:GetDamagePosition()
+    local bloodColor = ent.bloodColorHitFix
+    print( bloodColor )
+
+    -- 3 Because robots don't bleed yet they have their own blood type for some reason.
+    if not bloodColor or bloodColor == 3 then return end
+
+    local hitPos = data:GetDamagePosition()
     local inflictorEyepos = data:GetAttacker():EyePos()
-    local effectdata = EffectData()
-    effectdata:SetOrigin( hitpos )
-    util.Effect( "BloodImpact", effectdata )
+    local effectData = EffectData()
 
-    local tempBloodPos = ( hitpos + ( ( inflictorEyepos - hitpos ):GetNormalized() * math_random( -25, -200 ) ) ) + Vector( math_random( -15, 15 ), math_random( -15, 15 ), 0 )
+    effectData:SetOrigin( hitPos )
+    effectData:SetColor( bloodColor )
+    util.Effect( "BloodImpact", effectData )
+
+    local tempBloodPos = ( hitPos + ( ( inflictorEyepos - hitPos ):GetNormalized() * math_random( -25, -200 ) ) ) + Vector( math_random( -15, 15 ), math_random( -15, 15 ), 0 )
     local bloodPos = tempBloodPos - Vector( 0, 0, 75 )
 
-    util_Decal( "Blood", hitpos, tempBloodPos, ent )
-    util_Decal( "Blood", tempBloodPos, bloodPos, ent )
+    local bloodMat = rawget( bloodColors, bloodColor )
+    if not bloodMat then return end
+
+    util_Decal( bloodMat, hitPos, tempBloodPos, ent )
+    util_Decal( bloodMat, tempBloodPos, bloodPos, ent )
 end
 
 hook.Add( "PostEntityTakeDamage", "ResponsiveHits_PostEntityTakeDamage", playEffects )
