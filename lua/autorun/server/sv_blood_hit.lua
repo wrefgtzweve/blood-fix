@@ -16,7 +16,7 @@ local bloodColors = {
 }
 
 local function playEffects( ent, data )
-    if not ( ent:IsPlayer() or ent:IsNPC() ) or not isBulletDamage( data ) then return end
+    if not ( ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot() ) or not isBulletDamage( data ) then return end
 
     if getBloodColor( ent ) ~= -1 then
         ent.bloodColorHitFix = getBloodColor( ent )
