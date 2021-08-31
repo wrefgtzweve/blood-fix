@@ -49,3 +49,14 @@ local function playEffects( ent, data )
 end
 
 hook.Add( "PostEntityTakeDamage", "ResponsiveHits_PostEntityTakeDamage", playEffects )
+
+local function setBloodonSpawn( ent )
+    if getBloodColor( ent ) ~= -1 then
+        ent.bloodColorHitFix = getBloodColor( ent )
+        ent:SetBloodColor( -1 )
+    end
+
+    if getBloodColor( ent ) ~= -1 then return end
+end
+
+hook.Add( "PlayerSpawn", "ResponsiveHits_PlayerSpawn", setBloodonSpawn )
