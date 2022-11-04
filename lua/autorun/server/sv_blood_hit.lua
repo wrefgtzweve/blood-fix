@@ -4,6 +4,7 @@ local isBulletDamage = FindMetaTable( "CTakeDamageInfo" ).IsBulletDamage
 local util_Decal = util.Decal
 local math_random = math.random
 local rawget = rawget
+local IsValid = IsValid
 
 local bloodColors = {
     [0] = "Blood",
