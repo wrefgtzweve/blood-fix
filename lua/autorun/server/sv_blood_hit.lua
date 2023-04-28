@@ -17,7 +17,7 @@ local bloodColors = {
 }
 
 local function playEffects( ent, data )
-    if not IsValid( ent ) or not IsValid( data ) then return end
+    if not IsValid( ent ) or not data then return end
 
     if not ( ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot() ) or not isBulletDamage( data ) then return end
 
@@ -54,12 +54,16 @@ end
 hook.Add( "PostEntityTakeDamage", "ResponsiveHits_PostEntityTakeDamage", playEffects )
 
 local function setBloodonSpawn( ent )
-    if getBloodColor( ent ) ~= -1 then
-        ent.bloodColorHitFix = getBloodColor( ent )
-        ent:SetBloodColor( -1 )
-    end
-
-    if getBloodColor( ent ) ~= -1 then return end
+    if getBloodColor( ent ) == -1 then return end
+    ent.bloodColorHitFix = getBloodColor( ent )
+    ent:SetBloodColor( -1 )
 end
 
 hook.Add( "PlayerSpawn", "ResponsiveHits_PlayerSpawn", setBloodonSpawn )
+hook.Add( "OnEntityCreated", "ResponsiveHits_OnEntityCreated", function( ent )
+    timer.Simple( 0, function()
+        if not IsValid( ent ) then return end
+        if not ent:IsNPC() then return end
+        setBloodonSpawn( ent )
+    end )
+end )
