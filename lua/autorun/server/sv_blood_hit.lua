@@ -18,6 +18,7 @@ local bloodColors = {
 
 local function playEffects( ent, data )
     if not IsValid( ent ) or not data then return end
+    if ent.IgnoreFakeHitFix then return end
 
     if not ( ent:IsPlayer() or ent:IsNPC() or ent:IsNextBot() ) or not isBulletDamage( data ) then return end
 
